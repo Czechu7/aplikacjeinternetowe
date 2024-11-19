@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { User } from '../_models/user';
 import { map } from 'rxjs';
+import { Products } from '../_models/products';
+import { Cart } from '../_models/cart';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +45,28 @@ export class AccountService {
     return this.http.get<User>(this.baseUrl + "users");
   }
 
+  getProducts(){
+    return this.http.get<Products>(this.baseUrl + "products")
+  }
+
+  addProduct(model: Products){
+    return this.http.post<Products>(this.baseUrl + "products", model)
+  }
+
+  getCart(){
+    return this.http.get<Cart>(this.baseUrl + "cart")
+  }
+
+  addCart(model: Cart){
+    return this.http.post<Cart>(this.baseUrl + "cart", model)
+  }
+
+  getProductById(id: number) {
+    return this.http.get<Products>(`${this.baseUrl}products/${id}`);
+  }
   
+  getCartById(id: number) {
+    return this.http.get<Cart>(`${this.baseUrl}cart/${id}`);
+  }
+
 }

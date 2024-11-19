@@ -1,0 +1,16 @@
+<div class="container-fluid">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Name" />
+      <input type="number" class="form-control" placeholder="Quantity" />
+      <input type="number" class="form-control" placeholder="Price" />
+      <button class="btn btn-primary" (click)="addProduct()">Add Product</button>
+    </div>
+  </div>
+<ul class="list-group">
+    @for (products of products; track products.id) {
+      <li class="list-group-item">
+        {{ products.id + ". " + products.userName }}
+      </li>
+    }
+</ul> 
+
