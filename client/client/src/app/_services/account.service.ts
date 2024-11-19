@@ -46,11 +46,11 @@ export class AccountService {
   }
 
   getProducts(){
-    return this.http.get<Products>(this.baseUrl + "products")
+    return this.http.get<Products>(this.baseUrl + "product")
   }
 
   addProduct(model: Products){
-    return this.http.post<Products>(this.baseUrl + "products", model)
+    return this.http.post<Products>(this.baseUrl + "product", model)
   }
 
   getCart(){
