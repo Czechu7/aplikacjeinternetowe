@@ -35,8 +35,8 @@ export class ProductsComponent implements OnInit {
 
   addProduct() {
     this.accountService.addProduct(this.newProduct).subscribe({
-      next: (products) => {
-        this.products = products;
+      next: () => {
+        this.loadProducts();
         this.resetForm();
       },
       error: (error) => console.log(error),
