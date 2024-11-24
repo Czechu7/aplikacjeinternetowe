@@ -43,6 +43,20 @@
                 type="password">
             <button class="btn btn-success" type="submit">Login</button>
         </form>
+        @if(twoFactorRequired){
+        <form #twoFactorForm="ngForm" (ngSubmit)="verifyTwoFactorCode()" autocomplete="off">
+            <div class="mb-3 form-floating">
+              <input 
+                type="text" 
+                class="form-control" 
+                name="twoFactorCode" 
+                [(ngModel)]="model.twoFactorCode" 
+                placeholder="2FA Code"
+              >
+              <label>2FA Code</label>
+            </div>
+            <button class="btn btn-success" type="submit">Verify Code</button>
+          </form>}
         }
 
     </div>

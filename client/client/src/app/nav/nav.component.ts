@@ -16,18 +16,34 @@ export class NavComponent {
   accountService = inject(AccountService)
   private router = inject(Router)
   private toastr = inject(ToastrService)
+  twoFactorRequired: boolean = false;
+
   model: any = {};
 
   login() {
     this.accountService.login(this.model).subscribe({
-      next: response => {
+      next: (response : any) => {
         console.log(response);
-        this.router.navigateByUrl('/members');
+        if (response.twoFactorRequired) {
+          this.twoFactorRequired = true;
+        } else {
+          this.router.navigateByUrl('/members');
+        }
       },
-      error: error => this.toastr.error(error.error)
-    })
+      error: (error) => this.toastr.error(error.error)
+    });
   }
-
+  
+  verifyTwoFactorCode() {
+    this.accountService.verifyTwoFactorCode(this.model.username, this.model.twoFactorCode).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.router.navigateByUrl('/members'); 
+      },
+      error: (error) => this.toastr.error(error.error)
+    });
+  }
+  
   logout(){
     this.accountService.logout();
     this.router.navigateByUrl('/');

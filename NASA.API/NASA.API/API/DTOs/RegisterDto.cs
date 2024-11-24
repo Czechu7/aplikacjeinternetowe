@@ -10,4 +10,7 @@ public class RegisterDto
     [Required]
     [StringLength(8, MinimumLength = 4)]
     public string Password { get; set; } = string.Empty;
+
+    [Required]
+    public bool Enable2Fa { get; set; }
 }
