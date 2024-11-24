@@ -83,7 +83,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
     }
 
     [HttpPost("verify-2fa")]
-    public async Task<ActionResult> VerifyTwoFactorCode([FromBody] VerifyTwoFactorDto dto)
+    public async Task<ActionResult<UserDto>> VerifyTwoFactorCode([FromBody] VerifyTwoFactorDto dto)
     {
         var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == dto.Username);
         if (user == null || !user.Enabled2FA)
@@ -97,7 +97,11 @@ public class AccountController(DataContext context, ITokenService tokenService) 
 
         if (!isCodeValid) return Unauthorized("Invalid 2FA code");
 
-        return Ok(new { Token = tokenService.CreateToken(user) });
+        return new UserDto
+        {
+            Username = user.UserName,
+            Token = tokenService.CreateToken(user),
+        };
     }
 
 

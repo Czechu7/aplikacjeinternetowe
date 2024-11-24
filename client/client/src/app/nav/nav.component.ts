@@ -37,7 +37,11 @@ export class NavComponent {
   verifyTwoFactorCode() {
     this.accountService.verifyTwoFactorCode(this.model.username, this.model.twoFactorCode).subscribe({
       next: (response) => {
-        console.log(response);
+        this.accountService.currentUser.set({
+          username: response.username,
+          token: response.token,
+          enable2fa: true,
+        });
         this.router.navigateByUrl('/members'); 
       },
       error: (error) => this.toastr.error(error.error)
