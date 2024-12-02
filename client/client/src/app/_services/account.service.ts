@@ -13,16 +13,38 @@ export class AccountService {
   baseUrl = "https://localhost:5001/api/";
   currentUser = signal<User | null>(null)
 
-  login(model: any){
+  login(model: any) {
     return this.http.post<User>(this.baseUrl + "account/login", model).pipe(
-      map(user =>{
-        if(user){
-          localStorage.setItem('user', JSON.stringify(user))
+      map(user => {
+        if (user) {
+         
+          localStorage.setItem('tempUser', JSON.stringify({
+            username: user.username,
+            totpCode: user.totpCode
+          }));
+        }
+        return user;
+      })
+    );
+  }
+
+  verifyTotp(totpCode: string) {
+    const tempUser = JSON.parse(localStorage.getItem('tempUser') || '{}');
+    return this.http.post<User>(this.baseUrl + "account/verify-totp", {
+      username: tempUser.username,
+      totpCode: totpCode
+    }).pipe(
+      map(user => {
+        if (user) {
+          localStorage.removeItem('tempUser');
+          localStorage.setItem('user', JSON.stringify(user));
           this.currentUser.set(user);
         }
+        return user;
       })
-    )
+    );
   }
+
 
   register(model: any){
     return this.http.post<User>(this.baseUrl + "account/register", model).pipe(
