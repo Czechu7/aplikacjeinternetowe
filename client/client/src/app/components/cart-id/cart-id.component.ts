@@ -14,6 +14,7 @@ export class CartIdComponent {
   route = inject(ActivatedRoute);
   
   cart: any;
+  produty: any;
   id: number = 0;
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
@@ -23,6 +24,5 @@ export class CartIdComponent {
       complete: () => console.log('Request has been completed')
     });
   }
-
 
 }

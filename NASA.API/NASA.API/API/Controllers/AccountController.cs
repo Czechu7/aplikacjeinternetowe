@@ -61,6 +61,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
 
         return new UserDto
         {
+            Id = user.Id.ToString(),
             Username = user.UserName,
             Token = tokenService.CreateToken(user),
             TotpCode = totp
@@ -82,6 +83,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
 
         return new UserDto
         {
+            Id = user.Id.ToString(),
             Username = user.UserName,
             Token = tokenService.CreateToken(user)
         };

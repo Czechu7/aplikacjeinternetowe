@@ -17,8 +17,8 @@ export class AccountService {
     return this.http.post<User>(this.baseUrl + "account/login", model).pipe(
       map(user => {
         if (user) {
-         
           localStorage.setItem('tempUser', JSON.stringify({
+            id : user.id,
             username: user.username,
             totpCode: user.totpCode
           }));
@@ -31,6 +31,7 @@ export class AccountService {
   verifyTotp(totpCode: string) {
     const tempUser = JSON.parse(localStorage.getItem('tempUser') || '{}');
     return this.http.post<User>(this.baseUrl + "account/verify-totp", {
+      id: tempUser.id,
       username: tempUser.username,
       totpCode: totpCode
     }).pipe(
