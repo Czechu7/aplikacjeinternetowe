@@ -5,4 +5,5 @@ public class TotpVerificationDto
 {
     public required string Username { get; set; }
     public required string TotpCode { get; set; }
+    public  string? Token { get; set; }
 }

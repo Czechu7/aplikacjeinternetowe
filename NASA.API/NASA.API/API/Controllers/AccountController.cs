@@ -42,20 +42,28 @@ public class AccountController(DataContext context, ITokenService tokenService) 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        var user = await context.Users.FirstOrDefaultAsync(x =>
-            x.UserName == loginDto.Username.ToLower());
+        // Vulnerable SQL query using string concatenation
+        var rawSql = $"SELECT * FROM Users WHERE UserName = '{loginDto.Username}'";
+        var user = await context.Users.FromSqlRaw(rawSql).FirstOrDefaultAsync();
 
         if (user == null) return Unauthorized("Invalid username");
 
+        // Vulnerable password check
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
-        for (int i = 0; i < computedHash.Length; i++)
+        var passwordMatch = true;
+        for (int i = 0; i < computedHash.Length && i < user.PasswordHash.Length; i++)
         {
-            if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
+            if (computedHash[i] != user.PasswordHash[i])
+            {
+                passwordMatch = false;
+                break;
+            }
         }
 
-        // Generate TOTP after successful password verification
+        if (!passwordMatch) return Unauthorized("Invalid password");
+
         var totp = TotpGenerator.GenerateAndStoreTotp(user.UserName);
         Console.WriteLine($"Generated TOTP for {user.UserName}: {totp}");
 
@@ -63,7 +71,6 @@ public class AccountController(DataContext context, ITokenService tokenService) 
         {
             Id = user.Id.ToString(),
             Username = user.UserName,
-            Token = tokenService.CreateToken(user),
             TotpCode = totp
         };
     }

@@ -38,11 +38,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Cart>> CreateCart(CartDto cartDto)
         {
-            // Verify if user exists
             var user = await context.Users.FindAsync(cartDto.UserId);
             if (user == null) return BadRequest("User not found");
 
-            // Verify if product exists
             var product = await context.Products.FindAsync(cartDto.ProductId);
             if (product == null) return BadRequest("Product not found");
 
@@ -55,7 +53,6 @@ namespace API.Controllers
             context.Carts.Add(cart);
             await context.SaveChangesAsync();
 
-            // Reload cart with included entities
             cart = await context.Carts
                 .Include(c => c.User)
                 .Include(c => c.Product)

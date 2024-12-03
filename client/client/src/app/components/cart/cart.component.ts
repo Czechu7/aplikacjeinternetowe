@@ -88,7 +88,7 @@ export class CartComponent implements OnInit {
       next: () => {
         this.loadCarts();
         this.toastr.success('Added to cart');
-        // Reset productId after successful addition
+       
         this.newCart.productId = 0;
       },
       error: (error) => {
